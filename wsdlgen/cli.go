@@ -7,9 +7,9 @@ import (
 	"log"
 	"os"
 
-	"aqwari.net/xml/internal/commandline"
-	"aqwari.net/xml/internal/gen"
-	"aqwari.net/xml/xsdgen"
+	"github.com/mirpl/go-xml/internal/commandline"
+	"github.com/mirpl/go-xml/internal/gen"
+	"github.com/mirpl/go-xml/xsdgen"
 )
 
 // The GenSource method converts the AST returned by GenAST to formatted
