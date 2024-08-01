@@ -684,7 +684,7 @@ func (cfg *Config) genComplexType(t *xsd.ComplexType) ([]spec, error) {
 		if el.Nillable || el.Optional {
 			options = ",omitempty"
 		}
-		tag := fmt.Sprintf(`xml:"%s:%s%s"`, "urn", el.Name.Local, options)
+		tag := fmt.Sprintf(`json:"%s" xml:"%s:%s%s"`, strings.ToLower(el.Name.Local[:1])+el.Name.Local[1:], "urn", el.Name.Local, options)
 		base, err := cfg.expr(el.Type)
 		if err != nil {
 			return nil, fmt.Errorf("%s element %s: %v", t.Name.Local, el.Name.Local, err)
