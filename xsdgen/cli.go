@@ -26,15 +26,31 @@ func (cfg *Config) GenCode(data ...[]byte) (*Code, error) {
 		return nil, err
 	}
 	primaries := make([]xsd.Schema, 0, len(cfg.namespaces))
+	newNamespaces := make([]string, 0)
 	for _, s := range deps {
 		for _, ns := range cfg.namespaces {
+			if ns == "urn:pl:oire:businessDataTypes:v1" || ns == "urn:pl:oire:technical:v1" {
+				continue
+			}
 			if s.TargetNS == ns {
+				for _, v := range s.Types {
+					switch t := v.(type) {
+					case *xsd.ComplexType:
+						for _, e := range t.Elements {
+							if e.Name.Local == "Header" || e.Name.Local == "ProcessEnergyContext" {
+								eVal := e.Type.(*xsd.ComplexType)
+								eVal.Elements = []xsd.Element{}
+							}
+						}
+					}
+				}
 				primaries = append(primaries, s)
+				newNamespaces = append(newNamespaces, ns)
 				break
 			}
 		}
 	}
-	if len(primaries) < len(cfg.namespaces) {
+	if len(primaries) < len(newNamespaces) {
 		missing := make([]string, 0, len(cfg.namespaces)-len(primaries))
 		have := make(map[string]bool)
 		for _, schema := range primaries {
